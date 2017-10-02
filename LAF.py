@@ -13,11 +13,20 @@ def Ell2LAF(ell):
     c = ell[4]
     C = np.array([[a, b], [b, c]])
     sc = np.sqrt(a*c - b*b)
-    A23[0:2,0:2] = sqrtm(C)[::-1,::-1] / sc
-    A23[1,0] = -A23[1,0]
-    A23[0,1] = 0
+    A = sqrtm(C) / sc
+    sc = np.sqrt(A[0,0] * A[1,1] - A[1,0] * A[0,1])
+    A23[0:2,0:2] = rectifyAffineTransformationUpIsUp(A / sc) * sc
     return A23
 
+def rectifyAffineTransformationUpIsUp(A):
+    det = np.sqrt(np.abs(A[0,0]*A[1,1] - A[1,0]*A[0,1] + 1e-10))
+    b2a2 = np.sqrt(A[0,1] * A[0,1] + A[0,0] * A[0,0])
+    A_new = np.zeros((2,2))
+    A_new[0,0] = b2a2 / det
+    A_new[0,1] = 0
+    A_new[1,0] = (A[1,1]*A[0,1]+A[1,0]*A[0,0])/(b2a2*det)
+    A_new[1,1] = det / b2a2
+    return A_new
 
 def ells2LAFs(ells):
     LAFs = np.zeros((len(ells), 2,3))
@@ -27,11 +36,11 @@ def ells2LAFs(ells):
 
 def LAF2pts(LAF, n_pts = 50):
     a = np.linspace(0, 2*np.pi, n_pts);
-    x = list(np.cos(a))
-    x.append(0)
+    x = [0]
+    x.extend(list(np.sin(a)))
     x = np.array(x).reshape(1,-1)
-    y = list(np.sin(a))
-    y.append(0)
+    y = [0]
+    y.extend(list(np.cos(a)))
     y = np.array(y).reshape(1,-1)
     HLAF = np.concatenate([LAF, np.array([0,0,1]).reshape(1,3)])
     H_pts =np.concatenate([x,y,np.ones(x.shape)])
