@@ -160,9 +160,9 @@ def readMODS_ExtractFeaturesFile(fname):
                 for feat_idx in range(features_num):
                     current_pos+=1
                     l = lines[current_pos].strip().split(' ')
-                    LAFs[feat_idx,0:2] = np.array(l[4:6]) 
-                    LAFs[feat_idx,2] = mrSize * np.array(float(l[12])) 
-                    LAFs[feat_idx,3:] = np.array(l[6:10]) 
+                    LAFs[feat_idx,0:2] = np.array(l[14:16]) 
+                    LAFs[feat_idx,2] = mrSize * np.array(float(l[23])) 
+                    LAFs[feat_idx,3:] = np.array(l[16:20]) 
                     if desc_len > 0:
                         descriptors[feat_idx,:] = np.array(l[26:])
                 features_dict[det_name][desc_name] = (LAFs, descriptors)
