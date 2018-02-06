@@ -128,6 +128,46 @@ def visualize_LAFs(img, LAFs):
     plt.show()
     return 
 
+def readMODS_keypointsFile(fname):
+    mrSize = 3.0 * np.sqrt(3.0)
+    features_dict = {}
+    with open(fname, 'rb') as f:
+        lines = f.readlines()
+        det_num = int(lines[0])
+        current_pos = 1
+        for det_idx in range(det_num):
+            dd = lines[current_pos]
+            dd = dd.strip().split(' ')
+            det_name = dd[0]
+            desc_num = int(dd[1])
+            features_dict[det_name] = {}
+            current_pos +=1
+            print det_name, desc_num
+            for desc_idx in range(desc_num):
+                dd2 = lines[current_pos]
+                dd2 = dd2.strip().split(' ')
+                desc_name = dd2[0]
+                features_num = int(dd2[1])
+                print desc_name, features_num
+                current_pos+=1
+                desc_len =  int(lines[current_pos])
+                print desc_len
+                LAFs = np.zeros((features_num, 7))
+                if desc_len > 0:
+                    descriptors = np.zeros((features_num, desc_len))
+                else:
+                    descriptors = None
+                for feat_idx in range(features_num):
+                    current_pos+=1
+                    l = lines[current_pos].strip().split(' ')
+                    LAFs[feat_idx,0:2] = np.array(l[0:2]) 
+                    LAFs[feat_idx,2] = mrSize * np.array(float(l[2])) 
+                    LAFs[feat_idx,3:] = np.array(l[3:3+4]) 
+                    if desc_len > 0:
+                        descriptors[feat_idx,:] = np.array(l[8:])
+                features_dict[det_name][desc_name] = (LAFs, descriptors)
+                current_pos+=1
+    return features_dict
 def readMODS_ExtractFeaturesFile(fname):
     mrSize = 3.0 * np.sqrt(3.0)
     features_dict = {}
