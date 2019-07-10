@@ -97,7 +97,7 @@ def convertLAFs_to_A23format(LAFs):
         work_LAFs[:,1,0] = LAFs[:,4]
         work_LAFs[:,1,1] = LAFs[:,5]
     else:
-        print 'Unknown LAF format'
+        print ('Unknown LAF format')
         return None
     return work_LAFs
 
@@ -142,16 +142,16 @@ def readMODS_keypointsFile(fname):
             desc_num = int(dd[1])
             features_dict[det_name] = {}
             current_pos +=1
-            print det_name, desc_num
+            print (det_name, desc_num)
             for desc_idx in range(desc_num):
                 dd2 = lines[current_pos]
                 dd2 = dd2.strip().split(' ')
                 desc_name = dd2[0]
                 features_num = int(dd2[1])
-                print desc_name, features_num
+                print (desc_name, features_num)
                 current_pos+=1
                 desc_len =  int(lines[current_pos])
-                print desc_len
+                print (desc_len)
                 LAFs = np.zeros((features_num, 7))
                 if desc_len > 0:
                     descriptors = np.zeros((features_num, desc_len))
@@ -182,16 +182,16 @@ def readMODS_ExtractFeaturesFile(fname):
             desc_num = int(dd[1])
             features_dict[det_name] = {}
             current_pos +=1
-            print det_name, desc_num
+            print (det_name, desc_num)
             for desc_idx in range(desc_num):
                 dd2 = lines[current_pos]
                 dd2 = dd2.strip().split(' ')
                 desc_name = dd2[0]
                 features_num = int(dd2[1])
-                print desc_name, features_num
+                print (desc_name, features_num)
                 current_pos+=1
                 desc_len =  int(lines[current_pos])
-                print desc_len
+                print (desc_len)
                 LAFs = np.zeros((features_num, 7))
                 if desc_len > 0:
                     descriptors = np.zeros((features_num, desc_len))
